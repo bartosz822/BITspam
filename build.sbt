@@ -32,10 +32,43 @@ val akkaDependencies = {
 
 }
 
+val sparkDependencies = {
+
+  val sparkMlVersion = "2.1.1"
+  val sparkVersion = "2.1.1"
+
+  Seq(
+    "org.apache.spark" %% "spark-mllib" % sparkMlVersion,
+    "org.apache.spark" %% "spark-core" % sparkVersion
+  )
+
+
+}
+
+
+val jacksonDependencies = {
+
+  val jacksonVersion = "2.6.5"
+
+  Set(
+    "com.fasterxml.jackson.module" % "jackson-module" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-core"  % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-annotations"  % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"  % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310"  % jacksonVersion
+  )
+
+}
+
+
 libraryDependencies += filters
 libraryDependencies ++= playDependencies
 libraryDependencies ++= akkaDependencies
 libraryDependencies ++= levelDBDependencies
+libraryDependencies ++= sparkDependencies
+
+dependencyOverrides ++= jacksonDependencies
 
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
