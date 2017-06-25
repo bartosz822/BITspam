@@ -69,6 +69,9 @@ libraryDependencies ++= levelDBDependencies
 libraryDependencies ++= sparkDependencies
 
 dependencyOverrides ++= jacksonDependencies
+dependencyOverrides += "org.codehaus.janino" % "janino" % "3.0.7"
+dependencyOverrides += "org.codehaus.janino" % "commons-compiler" % "3.0.7"
+
 
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
