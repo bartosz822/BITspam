@@ -6,7 +6,7 @@ import akka.persistence.PersistentActor
 import akka.util.Timeout
 import model.domain.classification.ClassifierActor
 import model.domain.{EmailId, EmailMetadata, EmailService}
-import model.service.TimeProvider
+import model.service.{IsRelevantClassifier, TimeProvider}
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -21,7 +21,8 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
 
   private lazy val accountId = context.system.settings.config.getString("zoho.accountId")
 
-  private lazy val classifierActor = context.actorOf(ClassifierActor.props)
+  private val classifierService = new IsRelevantClassifier
+  private lazy val classifierActor = context.actorOf(ClassifierActor.props(classifierService))
 
   private val emails = mutable.Set[EmailId]()
 
@@ -35,7 +36,9 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
   }
 
   def handleEvent: Receive = {
-    case EmailAdded(emailId, _, _, _, _) => emails += emailId
+    case EmailAdded(emailId, _, content,label, _) => {
+      emails += emailId
+    }
   }
 
   private def getMail() =
