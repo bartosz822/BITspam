@@ -3,7 +3,7 @@ package controllers
 import javax.inject._
 
 import akka.actor.ActorSystem
-import model.domain.{MailboxActor, MailboxScheduler}
+import model.domain.mailbox.{MailboxActor, MailboxScheduler}
 import model.service.RESTZohoService
 import play.api.libs.ws.WSClient
 import play.api.mvc._

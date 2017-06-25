@@ -4,8 +4,10 @@ import java.util.Date
 
 package object domain {
 
-  final case class EmailId(value: String)
+  final case class EmailId(folderId: String, messageId: String)
 
-  final case class EmailMetadata(id: EmailId, sender: String, sentTime: Date, receivedTime: Date)
+  final case class EmailMetadata(messageId: String, folderId: String, sender: String, sentTime: Date, receivedTime: Date)
+
+  final case class Email(id: EmailId)
 
 }
