@@ -6,6 +6,6 @@ package model.domain.classification
 trait ClassifierService {
 
   // classifier should return double value representing classification
-  def classify(text: String): Double
+  def classify(text: String): String
 
 }
