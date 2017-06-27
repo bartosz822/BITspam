@@ -8,6 +8,6 @@ package object domain {
 
   final case class EmailMetadata(messageId: String, folderId: String, sender: String, sentTime: Date, receivedTime: Date)
 
-  final case class Email(id: EmailId)
+  final case class Email(id: EmailId, sender: String, sentTime: Date, receivedTime: Date, content: String, label: String)
 
 }
