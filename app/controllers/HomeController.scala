@@ -7,9 +7,11 @@ import akka.persistence.query.PersistenceQuery
 import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
 import akka.stream.ActorMaterializer
 import model.RESTZohoService
+import model.api.Requests.MailUpdateRequest
 import model.domain.EmailId
 import model.domain.mailbox.{MailboxActor, MailboxScheduler}
-import model.infractructure.mongo.{EmailUpdate, MongoMailRepository}
+import model.infractructure.mongo.MongoMailRepository
+import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
@@ -59,11 +61,12 @@ class HomeController @Inject()(val reactiveMongoApi: ReactiveMongoApi, ws: WSCli
     }
   }
 
+  implicit val emailUpdateReads = Json.reads[MailUpdateRequest]
+
   def updateMail(id: String) = Action.async(parse.json) { implicit request =>
-      mailRepository.updateMail(request.body.as[EmailUpdate]).map(_ => Ok)
+      mailRepository.updateMail(request.body.as[MailUpdateRequest].toDTO(EmailId(id))).map(_ => Ok)
   }
 
-  // TODO unlabeled mails view?
-  // TODO mail with edit link?
+
 
 }

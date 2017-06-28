@@ -7,7 +7,6 @@ import akka.util.Timeout
 import model.{IsRelevantClassifier, TimeProvider}
 import model.domain.classification.ClassifierActor
 import model.domain._
-import model.service.IsRelevantClassifier
 
 import scala.collection.mutable
 import scala.concurrent.Future
@@ -38,6 +37,7 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
 
   def handleEvent: Receive = {
     case EmailAdded(emailId, _, _,_, _) => {
+      println(emailId)
       emails += emailId
     }
   }
@@ -63,7 +63,9 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
       emailId = EmailId(metadata.folderId, metadata.messageId)
     } yield EmailAdded(emailId, metadata, content, label, TimeProvider.now)
 
-    emailAdded.filter(e => !emails.contains(e.id)).foreach(persist(_)(handleEvent))
+    deferAsync(persistenceId) { _ =>
+      emailAdded.filter(e => !emails.contains(e.id)).foreach(persist(_)(handleEvent))
+    }
   }
 
 }

@@ -2,6 +2,8 @@ package model
 
 import java.util.Date
 
+import play.api.libs.json.{JsPath, Reads}
+
 package object domain {
 
   final case class EmailId(folderId: String, messageId: String) {
@@ -10,11 +12,12 @@ package object domain {
   }
 
   object EmailId{
-    def apply(id: String) ={
+    def apply(id: String): EmailId ={
       val ids = id.split("-")
       EmailId(ids(0), ids(1))
     }
   }
+
 
   final case class EmailMetadata(messageId: String, folderId: String, sender: String, sentTime: Date, receivedTime: Date)
 
