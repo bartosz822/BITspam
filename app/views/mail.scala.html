@@ -10,22 +10,30 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            <title>Bit Spamm</title>
+            <title>bit spam</title>
 
-                <!-- Bootstrap -->
+            <script src="@routes.Assets.at("javascripts/jquery-3.2.1.js")"></script>
+
             <link href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")" rel="stylesheet">
-            <link href="@routes.Assets.at("bootstrap/css/bootstrap-theme.min.css")" rel="stylesheet">
+            <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")"></script>
+
+            <script src="@routes.Assets.at("summernote/dist/summernote.js")"></script>
+            <link href="@routes.Assets.at("summernote/dist/summernote.css")" rel="stylesheet">
+
+            <script src="@routes.Assets.at("javascripts/mail.js")"></script>
+
 
         </head>
         <body>
 
-            <div class="jumbotron">
-                @Html(mail.content)
-            </div>
+            <h2>Label</h2>
+            <textarea id="label">@mail.label</textarea>
 
+            <h2>Content</h2>
+            <div id="summernote">@Html(mail.content.replaceAll("<img .*? />", ""))</div>
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-            <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")"></script>
+            <button id="submit">submit</button>
+
 
         </body>
     </html>

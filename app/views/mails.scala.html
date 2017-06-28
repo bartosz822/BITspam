@@ -22,7 +22,6 @@
 
     <div id="mails" title="Interesting mails">
       @for(mail <- mails){
-        <div> "@mail.id.folderId + @mail.id.messageId" </div>
         <div class="well">
           <p> @Html(mail.content.replaceAll("<img .*? />", "")) </p>
         </div>
