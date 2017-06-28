@@ -9,8 +9,8 @@ package object domain {
 
   }
 
-  object EmailId{
-    def apply(id: String) ={
+  object EmailId {
+    def apply(id: String): EmailId = {
       val ids = id.split("-")
       EmailId(ids(0), ids(1))
     }

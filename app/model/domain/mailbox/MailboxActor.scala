@@ -4,10 +4,9 @@ import akka.actor.{ActorLogging, Props}
 import akka.pattern.{ask, pipe}
 import akka.persistence.PersistentActor
 import akka.util.Timeout
-import model.{IsRelevantClassifier, TimeProvider}
-import model.domain.classification.ClassifierActor
 import model.domain._
-import model.service.IsRelevantClassifier
+import model.domain.classification.ClassifierActor
+import model.{IsRelevantClassifier, TimeProvider}
 
 import scala.collection.mutable
 import scala.concurrent.Future

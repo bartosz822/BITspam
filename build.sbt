@@ -58,6 +58,16 @@ val sparkDependencies = {
 
 }
 
+val emailDependencies = {
+
+  val mailVersion = "1.4.7"
+
+  Seq(
+    "javax.mail" % "mail" % mailVersion
+  )
+
+}
+
 
 val jacksonDependencies = {
 
@@ -81,6 +91,7 @@ libraryDependencies ++= akkaDependencies
 libraryDependencies ++= levelDBDependencies
 libraryDependencies ++= reactiveMongoDependencies
 libraryDependencies ++= sparkDependencies
+libraryDependencies ++= emailDependencies
 
 dependencyOverrides ++= jacksonDependencies
 dependencyOverrides += "org.codehaus.janino" % "janino" % "3.0.7"

@@ -57,6 +57,7 @@ class MongoMailRepository(database: DB, readJournal: LeveldbReadJournal)
       .one[EmailDTO]
       .map(_.map(_.toDomain))
 
+
   override def updateMail(email: EmailUpdate): Future[Done] =
     mailCollection
         .update(
