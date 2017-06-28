@@ -3,6 +3,8 @@ organization := "pl.edu.knbit"
 version := "0.1"
 scalaVersion := "2.11.11"
 
+
+// TODO: move all those dependencies to a separate `Dependencies` scala object
 val playDependencies = {
 
   val scalaTestVersion = "2.0.0"
@@ -24,18 +26,77 @@ val levelDBDependencies = {
 
 val akkaDependencies = {
 
-  val akkaVersion = "2.5.2"
+  val akkaVersion = "2.4.16"
 
   Seq(
-    "com.typesafe.akka" %% "akka-persistence" % akkaVersion
+    "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
+    "com.typesafe.akka" %% "akka-persistence-query-experimental" % akkaVersion
   )
 
 }
+
+val reactiveMongoDependencies = {
+
+  val reactiveMongoVersion = "0.11.14"
+
+  Seq(
+    "org.reactivemongo" %% "play2-reactivemongo" % reactiveMongoVersion
+  )
+
+}
+
+val sparkDependencies = {
+
+  val sparkMlVersion = "2.1.1"
+  val sparkVersion = "2.1.1"
+
+  Seq(
+    "org.apache.spark" %% "spark-mllib" % sparkMlVersion,
+    "org.apache.spark" %% "spark-core" % sparkVersion
+  )
+
+
+}
+
+val emailDependencies = {
+
+  val mailVersion = "1.4.7"
+
+  Seq(
+    "javax.mail" % "mail" % mailVersion
+  )
+
+}
+
+
+val jacksonDependencies = {
+
+  val jacksonVersion = "2.6.5"
+
+  Set(
+    "com.fasterxml.jackson.module" % "jackson-module" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-core"  % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-annotations"  % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"  % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310"  % jacksonVersion
+  )
+
+}
+
 
 libraryDependencies += filters
 libraryDependencies ++= playDependencies
 libraryDependencies ++= akkaDependencies
 libraryDependencies ++= levelDBDependencies
+libraryDependencies ++= reactiveMongoDependencies
+libraryDependencies ++= sparkDependencies
+libraryDependencies ++= emailDependencies
+
+dependencyOverrides ++= jacksonDependencies
+dependencyOverrides += "org.codehaus.janino" % "janino" % "3.0.7"
+dependencyOverrides += "org.codehaus.janino" % "commons-compiler" % "3.0.7"
+
 
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)

@@ -1,18 +1,17 @@
-package model.domain
+package model.domain.mailbox
 
 import javax.inject.Inject
 
-import akka.actor.{Actor, ActorRef, ActorSystem}
-
-import scala.concurrent.duration._
+import akka.actor.{ActorRef, ActorSystem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 class MailboxScheduler @Inject()(mailboxActor: ActorRef, system: ActorSystem) {
 
   system.scheduler.schedule(
     Duration.Zero,
-    5 minutes,
+    10 seconds,
     mailboxActor,
     MailboxActor.GetMail
   )
