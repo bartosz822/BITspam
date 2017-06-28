@@ -27,6 +27,8 @@ package object mongo {
 
   }
 
+  final case class EmailUpdate(id: EmailId, content: String, label: String)
+
   implicit object EmailReaderWriter extends BSONDocumentReader[EmailDTO] with BSONDocumentWriter[EmailDTO] {
 
     override def read(bson: BSONDocument): EmailDTO = EmailDTO(

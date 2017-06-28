@@ -4,15 +4,16 @@ import akka.actor.{ActorLogging, Props}
 import akka.pattern.{ask, pipe}
 import akka.persistence.PersistentActor
 import akka.util.Timeout
+import model.{IsRelevantClassifier, TimeProvider}
 import model.domain.classification.ClassifierActor
-import model.domain.{Email, EmailId, EmailMetadata, EmailService}
-import model.service.{IsRelevantClassifier, TimeProvider}
+import model.domain._
+import model.service.IsRelevantClassifier
 
 import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class MailboxActor(emailService: EmailService, mailRepository: MailRepository) extends PersistentActor with ActorLogging {
+class MailboxActor(emailService: EmailService) extends PersistentActor with ActorLogging {
 
   import MailboxActor._
 
@@ -32,13 +33,11 @@ class MailboxActor(emailService: EmailService, mailRepository: MailRepository) e
 
   override def receiveCommand: Receive = {
     case GetMail => getMail()
-    case GetMails => sender() ! mailRepository.getMails
     case c: ProcessNewMails => processNewMails(c)
   }
 
   def handleEvent: Receive = {
-    case EmailAdded(emailId, _, content,label, _) => {
-      mailRepository.addMail(Email(emailId, content, label))
+    case EmailAdded(emailId, _, _,_, _) => {
       emails += emailId
     }
   }
@@ -74,15 +73,13 @@ object MailboxActor {
 
   /* props */
 
-  def props(emailService: EmailService, mailRepository: MailRepository): Props = Props(new MailboxActor(emailService, mailRepository))
+  def props(emailService: EmailService): Props = Props(new MailboxActor(emailService))
 
   /* commands */
 
   sealed trait MailboxCommand
 
   object GetMail extends MailboxCommand
-
-  object GetMails extends MailboxCommand
 
   private final case class ProcessNewMails(emails: List[EmailMetadata]) extends MailboxCommand
 

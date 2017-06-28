@@ -17,6 +17,8 @@ import scala.util.{Failure, Success}
 class MongoMailRepository(database: DB, readJournal: LeveldbReadJournal)
                          (implicit ec: ExecutionContext, mat: Materializer) extends MailRepository {
 
+  import MongoMailRepository._
+
   private val mailCollection = database.collection[BSONCollection]("mails")
 
   readJournal.allPersistenceIds()
@@ -51,8 +53,28 @@ class MongoMailRepository(database: DB, readJournal: LeveldbReadJournal)
 
   override def getMail(emailId: EmailId): Future[Option[Email]] =
     mailCollection
-      .find(BSONDocument("messageId" -> emailId.messageId, "folderId" -> emailId.folderId))
+      .find(emailIdSelector(emailId))
       .one[EmailDTO]
       .map(_.map(_.toDomain))
+
+  override def updateMail(email: EmailUpdate): Future[Done] =
+    mailCollection
+        .update(
+          emailIdSelector(email.id),
+          BSONDocument(
+            "$set" -> BSONDocument(
+              "content" -> email.content,
+              "label" -> email.label
+            )
+          )
+        ).map(_ => Done)
+
+}
+
+
+object MongoMailRepository {
+
+  private def emailIdSelector(emailId: EmailId) =
+    BSONDocument("messageId" -> emailId.messageId, "folderId" -> emailId.folderId)
 
 }

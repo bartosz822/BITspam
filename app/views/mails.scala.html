@@ -1,0 +1,36 @@
+@import model.domain.{Email, EmailId}
+@import play.twirl.api.Html
+@(mails: List[Email])
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bit Spam</title>
+
+      <!-- Bootstrap -->
+    <link href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("bootstrap/css/bootstrap-theme.min.css")" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <h1>BIT SPAM Najnowsze wiadomości</h1>
+
+    <div id="mails" title="Interesting mails">
+      @for(mail <- mails){
+        <div> "@mail.id.folderId + @mail.id.messageId" </div>
+        <div class="well">
+          <p> @Html(mail.content.replaceAll("<img .*? />", "")) </p>
+        </div>
+      }
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")"></script>
+
+  </body>
+</html>

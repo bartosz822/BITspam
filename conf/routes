@@ -5,6 +5,6 @@
 
 GET     /                           controllers.HomeController.index
 GET     /mails                      controllers.HomeController.mails
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /mails/:id                  controllers.HomeController.getMail(id)
-POST    /mails/:id                  controllers.HomeController.updateMail(id)
-
+PUT     /mails/:id                  controllers.HomeController.updateMail(id)

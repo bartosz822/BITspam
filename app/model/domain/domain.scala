@@ -4,7 +4,17 @@ import java.util.Date
 
 package object domain {
 
-  final case class EmailId(folderId: String, messageId: String)
+  final case class EmailId(folderId: String, messageId: String) {
+    val value = folderId + "-" + messageId
+
+  }
+
+  object EmailId{
+    def apply(id: String) ={
+      val ids = id.split("-")
+      EmailId(ids(0), ids(1))
+    }
+  }
 
   final case class EmailMetadata(messageId: String, folderId: String, sender: String, sentTime: Date, receivedTime: Date)
 

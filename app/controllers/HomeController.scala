@@ -6,15 +6,12 @@ import akka.actor.ActorSystem
 import akka.persistence.query.PersistenceQuery
 import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
 import akka.stream.ActorMaterializer
+import model.RESTZohoService
+import model.domain.EmailId
 import model.domain.mailbox.{MailboxActor, MailboxScheduler}
-import model.infractructure.mongo.MongoMailRepository
-import model.domain.mailbox.{MailboxActor, MailboxScheduler, MockMailRepository}
-import model.service.RESTZohoService
+import model.infractructure.mongo.{EmailUpdate, MongoMailRepository}
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import play.twirl.api.Html
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 
 @Singleton
@@ -28,8 +25,7 @@ class HomeController @Inject()(val reactiveMongoApi: ReactiveMongoApi, ws: WSCli
   private val zohoAuthToken = system.settings.config.getString("zoho.authToken")
 
   private val emailService = new RESTZohoService(zohoAuthToken, ws)
-  private val emailRepository = new MockMailRepository
-  private val mailboxActor = system.actorOf(MailboxActor.props(emailService, emailRepository))
+  private val mailboxActor = system.actorOf(MailboxActor.props(emailService))
   private val _ = new MailboxScheduler(mailboxActor, system)
 
   private val readJournal = PersistenceQuery(system).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
@@ -43,15 +39,31 @@ class HomeController @Inject()(val reactiveMongoApi: ReactiveMongoApi, ws: WSCli
   }
 
   def mails = Action.async { implicit request =>
-    val mails = emailRepository.getMails
-    val contents = mails.map(_.filter(_.label == "1.0").take(5).map(_.content).map(Html(_)))
+    val mails = mailRepository.getMails()
 
-    contents.map(l =>Ok(views.html.mail(l)))
+    mails.map {
+      _.filter(_.label == "1.0").take(5)
+    }.map(l => Ok(views.html.mails(l)))
   }
 
-//  TODO Respond with one specific mail
-  def getMail(id: String) = play.mvc.Results.TODO
-//  TODO Update mail with specific id
-  def updateMail(id: String) = play.mvc.Results.TODO
+  def getMail(id: String) = Action.async { implicit  request =>
+
+    val emailId = EmailId(id)
+    val mail = mailRepository.getMail(emailId)
+
+    mail.map {
+      _.map { m => Ok(views.html.mail(m)) }
+        .getOrElse {
+          NotFound
+        }
+    }
+  }
+
+  def updateMail(id: String) = Action.async(parse.json) { implicit request =>
+      mailRepository.updateMail(request.body.as[EmailUpdate]).map(_ => Ok)
+  }
+
+  // TODO unlabeled mails view?
+  // TODO mail with edit link?
 
 }

@@ -1,5 +1,4 @@
-package model.service
-
+package model
 
 import java.util.Date
 import javax.inject.Inject

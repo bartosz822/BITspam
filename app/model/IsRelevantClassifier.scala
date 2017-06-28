@@ -1,4 +1,4 @@
-package model.service
+package model
 
 import model.domain.classification.ClassifierService
 import org.apache.spark.mllib.classification.NaiveBayesModel
@@ -14,9 +14,9 @@ class IsRelevantClassifier extends ClassifierService{
   val model: NaiveBayesModel = NaiveBayesModel.load(sc, "conf/model")
 
 
-
   def classify(text: String): String ={
     model.predict(htf.transform(text.replaceAll("""<(?!\/?a(?=>|\s.*>))\/?.*?>""", "").split(" "))).toString
   }
+
 }
 
