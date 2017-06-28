@@ -75,7 +75,7 @@ class MailboxActor(emailService: EmailService, mailSendingService: MailSendingSe
     val link = s"http://localhost:9000/mails/${emailId.value}"
 
     mailSendingService.send(
-      "luki.pol@gmail.com", // TODO: subscription mechanism
+      "radzynskib@gmail.com", // TODO: subscription mechanism
       "BIT new message!",
       views.html.email_template(link).toString()
     )

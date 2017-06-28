@@ -10,9 +10,8 @@ import model.RESTZohoService
 import model.api.Requests.MailUpdateRequest
 import model.domain.EmailId
 import model.domain.mailbox.{MailboxActor, MailboxScheduler}
-import model.infractructure.mongo.{EmailUpdate, MongoMailRepository}
-import model.infractructure.smtp.{MailboxWithPasswordAuth, SMTPMailService}
 import model.infractructure.mongo.MongoMailRepository
+import model.infractructure.smtp.{MailboxWithPasswordAuth, SMTPMailService}
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -42,7 +41,6 @@ class HomeController @Inject()(val reactiveMongoApi: ReactiveMongoApi, ws: WSCli
 
   private val readJournal = PersistenceQuery(system).readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
 
-  // TODO: here we have a reference to the mail repository which you can query for a list of emails or a specific email
   private val mailRepository = new MongoMailRepository(db, readJournal)
 
 
