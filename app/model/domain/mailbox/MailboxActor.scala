@@ -12,7 +12,7 @@ import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class MailboxActor(emailService: EmailService) extends PersistentActor with ActorLogging {
+class MailboxActor(emailService: EmailService, mailSendingService: MailSendingService) extends PersistentActor with ActorLogging {
 
   import MailboxActor._
 
@@ -36,9 +36,7 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
   }
 
   def handleEvent: Receive = {
-    case EmailAdded(emailId, _, _,_, _) => {
-      emails += emailId
-    }
+    case EmailAdded(emailId, _, _, _, _) => emails += emailId
   }
 
   private def getMail() =
@@ -60,9 +58,20 @@ class MailboxActor(emailService: EmailService) extends PersistentActor with Acto
       content <- getMailContent(metadata)
       label <- (classifierActor ? ClassifierActor.Classify(content)).mapTo[String]
       emailId = EmailId(metadata.folderId, metadata.messageId)
+      _ <- sendNotification(emailId)
     } yield EmailAdded(emailId, metadata, content, label, TimeProvider.now)
 
     emailAdded.filter(e => !emails.contains(e.id)).foreach(persist(_)(handleEvent))
+  }
+
+  private def sendNotification(emailId: EmailId) = {
+    val link = s"http://localhost:9000/mails/${emailId.value}"
+
+    mailSendingService.send(
+      "luki.pol@gmail.com", // TODO: subscription mechanism
+      "nowa wiadomość",
+      views.html.email_template(link).toString()
+    )
   }
 
 }

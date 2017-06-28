@@ -5,7 +5,7 @@ import javax.mail._
 import javax.mail.internet.{InternetAddress, MimeMessage}
 
 import akka.Done
-import model.domain.MailService
+import model.domain.MailSendingService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,7 +25,7 @@ final case class MailboxWithPasswordAuth(address: String, password: String, host
 }
 
 
-class SMTPMailService(config: MailboxWithPasswordAuth)(implicit ec: ExecutionContext) extends MailService {
+class SMTPMailService(config: MailboxWithPasswordAuth)(implicit ec: ExecutionContext) extends MailSendingService {
 
   private val session = config.toSession
 
