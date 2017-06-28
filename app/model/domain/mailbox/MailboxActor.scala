@@ -33,6 +33,7 @@ class MailboxActor(emailService: EmailService, mailSendingService: MailSendingSe
   override def receiveCommand: Receive = {
     case GetMail => getMail()
     case c: ProcessNewMails => processNewMails(c)
+    case c: FinishProcessing => finishProcessing(c)
   }
 
   def handleEvent: Receive = {
@@ -61,7 +62,13 @@ class MailboxActor(emailService: EmailService, mailSendingService: MailSendingSe
       _ <- sendNotification(emailId)
     } yield EmailAdded(emailId, metadata, content, label, TimeProvider.now)
 
-    emailAdded.filter(e => !emails.contains(e.id)).foreach(persist(_)(handleEvent))
+
+    emailAdded.map(FinishProcessing).pipeTo(self)
+  }
+
+  private def finishProcessing(command: FinishProcessing) = {
+    val event = command.emailAdded
+    if (!emails.contains(event.id)) persist(event)(handleEvent)
   }
 
   private def sendNotification(emailId: EmailId) = {
@@ -69,7 +76,7 @@ class MailboxActor(emailService: EmailService, mailSendingService: MailSendingSe
 
     mailSendingService.send(
       "luki.pol@gmail.com", // TODO: subscription mechanism
-      "nowa wiadomość",
+      "BIT new message!",
       views.html.email_template(link).toString()
     )
   }
@@ -81,7 +88,8 @@ object MailboxActor {
 
   /* props */
 
-  def props(emailService: EmailService): Props = Props(new MailboxActor(emailService))
+  def props(emailService: EmailService, mailSendingService: MailSendingService): Props =
+    Props(new MailboxActor(emailService, mailSendingService))
 
   /* commands */
 
@@ -90,5 +98,7 @@ object MailboxActor {
   object GetMail extends MailboxCommand
 
   private final case class ProcessNewMails(emails: List[EmailMetadata]) extends MailboxCommand
+
+  private final case class FinishProcessing(emailAdded: EmailAdded) extends MailboxCommand
 
 }
