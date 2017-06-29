@@ -1,6 +1,5 @@
 package model.service
 
-import model.IsRelevantClassifier
 import org.scalatestplus.play._
 
 /**

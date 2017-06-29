@@ -1,4 +1,4 @@
-package model
+package model.service
 
 import model.domain.classification.ClassifierService
 import org.apache.spark.mllib.classification.NaiveBayesModel

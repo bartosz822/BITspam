@@ -1,4 +1,4 @@
-package model
+package model.service
 
 import java.time.{LocalDateTime, ZoneId}
 import java.util.Date
