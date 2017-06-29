@@ -32,5 +32,15 @@ class HomeControllerSpec extends PlaySpec with OneAppPerTest {
       contentType(home) mustBe Some("text/html")
       contentAsString(home) must include ("Welcome to Play")
     }
+
+    "render the mails page from the router" in {
+      // Need to specify Host header to get through AllowedHostsFilter
+      val request = FakeRequest(GET, "/mails").withHeaders("Host" -> "localhost")
+      val mails = route(app, request).get
+
+      status(mails) mustBe OK
+      contentType(mails) mustBe Some("text/html")
+      contentAsString(mails) must include ("BIT SPAM")
+    }
   }
 }

@@ -15,7 +15,10 @@ class IsRelevantClassifier extends ClassifierService{
 
 
   def classify(text: String): String ={
-    model.predict(htf.transform(text.replaceAll("""<(?!\/?a(?=>|\s.*>))\/?.*?>""", "").split(" "))).toString
+    if (text.length < 10)
+      "0.0"
+    else
+      model.predict(htf.transform(text.replaceAll("""<(?!\/?a(?=>|\s.*>))\/?.*?>""", "").split(" "))).toString
   }
 
 }
