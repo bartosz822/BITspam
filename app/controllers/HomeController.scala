@@ -6,12 +6,12 @@ import akka.actor.ActorSystem
 import akka.persistence.query.PersistenceQuery
 import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
 import akka.stream.{ActorMaterializer, Materializer}
-import model.RESTZohoService
 import model.api.Requests.MailUpdateRequest
 import model.domain.EmailId
 import model.domain.mailbox.{MailboxActor, MailboxScheduler}
 import model.infractructure.mongo.MongoMailRepository
 import model.infractructure.smtp.{MailboxWithPasswordAuth, SMTPMailService}
+import model.service.RESTZohoService
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._

@@ -17,12 +17,14 @@
 
   </head>
   <body>
-
-    <h1>BIT SPAM Najnowsze wiadomości</h1>
+    <center>
+      <img src="@routes.Assets.at("images/BIT-SPAM.png")" class="img-rounded" alt="BIT SPAM" >
+    </center>
+    <h1 align="Middle">Najnowsze wiadomości</h1>
 
     <div id="mails" title="Interesting mails">
       @for(mail <- mails){
-        <div class="well">
+        <div class="well" align="middle">
           <p> @Html(mail.content.replaceAll("<img .*? />", "")) </p>
         </div>
       }

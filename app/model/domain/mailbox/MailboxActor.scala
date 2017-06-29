@@ -6,7 +6,7 @@ import akka.persistence.PersistentActor
 import akka.util.Timeout
 import model.domain._
 import model.domain.classification.ClassifierActor
-import model.{IsRelevantClassifier, TimeProvider}
+import model.service.{IsRelevantClassifier, TimeProvider}
 
 import scala.collection.mutable
 import scala.concurrent.Future
